@@ -1,0 +1,22 @@
+{
+  "name": "amsterdam-js",
+  "version": "0.0.1",
+  "description": "Taming the async flow: presentation for AmsterdamJS 2017",
+  "main": "index.js",
+  "scripts": {
+    "start": "instant --port 8080",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "presentation",
+    "amsterdam-js",
+    "async",
+    "promise"
+  ],
+  "author": "Roman Melnyk <email.rom.melnyk@gmail.com>",
+  "license": "ISC",
+  "private": true,
+  "devDependencies": {
+    "instant-server": "^2.0.0"
+  }
+}
