@@ -43,8 +43,11 @@ export class PlayerComponent implements OnInit {
     this.audioTracks.fetch()
       .then((tracks) => {
         this.tracks.push(...tracks);
-
-        const firstTrack = tracks[0].value;
+        return new Promise((resolve) => setTimeout(resolve, 100));
+      })
+      .then(() => {
+        // Emulating first track got selected
+        const firstTrack = this.tracks[1].value;
         selectEl.value = firstTrack;
         this.selectedTrack = firstTrack;
       })
