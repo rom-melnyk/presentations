@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, Output, EventEmitter } from '@angular/core';
 import { ITrack, AudioTracksService } from './services/audio-tracks.service';
 
 @Component({
   selector: 'app-player',
   template: `
     <select name="track-select" (change)="onTrackSelect($event)">
-      <option *ngFor="let track of tracks" value="track.value">{{track.name}}</option>
+      <option *ngFor="let track of tracks" value="{{track.value}}">{{track.name}}</option>
     </select>
-    <audio src="track"></audio>
+    <audio src="{{selectedTrack}}" controls></audio>
   `,
   styles: [
     `:host > * {
@@ -22,13 +22,19 @@ import { ITrack, AudioTracksService } from './services/audio-tracks.service';
 })
 export class PlayerComponent implements OnInit {
   public tracks: Array<ITrack> = [];
-  public track = '';
+  public selectedTrack = '';
+  @Output() public height = new EventEmitter<number>();
 
   constructor(
     private audioTracks: AudioTracksService,
+    private el: ElementRef,
   ) { }
 
   ngOnInit() {
+    this.height.emit(this.el.nativeElement.offsetHeight);
+
+    const selectEl = this.el.nativeElement.querySelector('select');
+
     this.tracks.push({
       name: 'Please select a track',
       value: ''
@@ -37,6 +43,10 @@ export class PlayerComponent implements OnInit {
     this.audioTracks.fetch()
       .then((tracks) => {
         this.tracks.push(...tracks);
+
+        const firstTrack = tracks[0].value;
+        selectEl.value = firstTrack;
+        this.selectedTrack = firstTrack;
       })
       .catch((err) => {
         console.log(err);
@@ -44,6 +54,6 @@ export class PlayerComponent implements OnInit {
   }
 
   onTrackSelect(e: Event) {
-    this.track = (<HTMLSelectElement>e.target).value;
+    this.selectedTrack = (<HTMLSelectElement>e.target).value;
   }
 }

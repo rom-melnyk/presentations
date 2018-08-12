@@ -1,10 +1,10 @@
-import { Component, ElementRef, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef } from '@angular/core';
 
 @Component({
   selector: 'app-root',
   template: `
-    <app-player></app-player>
-    <app-canvas></app-canvas>
+    <app-player (height)="setCanvasHeight($event)"></app-player>
+    <app-canvas [style.height]="canvasHeight"></app-canvas>
   `,
   styles: [
     `:host {
@@ -16,8 +16,18 @@ import { Component, ElementRef, OnInit } from '@angular/core';
     }`
   ]
 })
-export class AppComponent implements OnInit{
-  ngOnInit() {
+export class AppComponent implements OnInit {
+  public canvasHeight: string;
 
+  constructor(
+    private el: ElementRef,
+  ) {}
+
+  ngOnInit() {}
+
+  setCanvasHeight(playerHeight: number) {
+    const paddingCompensation = 8;
+    const canvasHeight = this.el.nativeElement.offsetHeight - playerHeight - paddingCompensation;
+    this.canvasHeight = `${canvasHeight}px`;
   }
 }

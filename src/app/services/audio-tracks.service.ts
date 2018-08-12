@@ -9,6 +9,7 @@ export interface ITrack {
   providedIn: 'root'
 })
 export class AudioTracksService {
+  private audioFolder = '/assets/audio/';
   private url = '/assets/audio/audio-files.json';
 
   constructor() { }
@@ -22,7 +23,7 @@ export class AudioTracksService {
         return response.map((track) => {
           return {
             name: this.format(track),
-            value: track
+            value: `${this.audioFolder}${track}`
           };
         });
       });
