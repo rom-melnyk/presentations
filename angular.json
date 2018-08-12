@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "spectrum-vizualizer": {
+    "spectrum-visualizer": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -38,7 +38,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/spectrum-vizualizer",
+            "outputPath": "dist/spectrum-visualizer",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -75,18 +75,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "spectrum-vizualizer:build"
+            "browserTarget": "spectrum-visualizer:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "spectrum-vizualizer:build:production"
+              "browserTarget": "spectrum-visualizer:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "spectrum-vizualizer:build"
+            "browserTarget": "spectrum-visualizer:build"
           }
         },
         "test": {
@@ -120,7 +120,7 @@
         }
       }
     },
-    "spectrum-vizualizer-e2e": {
+    "spectrum-visualizer-e2e": {
       "root": "e2e/",
       "projectType": "application",
       "architect": {
@@ -128,11 +128,11 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "spectrum-vizualizer:serve"
+            "devServerTarget": "spectrum-visualizer:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "spectrum-vizualizer:serve:production"
+              "devServerTarget": "spectrum-visualizer:serve:production"
             }
           }
         },
@@ -148,5 +148,5 @@
       }
     }
   },
-  "defaultProject": "spectrum-vizualizer"
+  "defaultProject": "spectrum-visualizer"
 }

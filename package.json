@@ -1,5 +1,5 @@
 {
-  "name": "spectrum-vizualizer",
+  "name": "spectrum-visualizer",
   "version": "0.0.0",
   "scripts": {
     "audio-src": "node src/audio-src.js",

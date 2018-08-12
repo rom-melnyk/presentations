@@ -27,5 +27,5 @@ import { Component } from '@angular/core';
   styles: []
 })
 export class AppComponent {
-  title = 'spectrum-vizualizer';
+  title = 'spectrum-visualizer';
 }
