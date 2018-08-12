@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ITrack, AudioTracksService } from './services/audio-tracks.service';
 
 @Component({
   selector: 'app-player',
@@ -20,10 +21,12 @@ import { Component, OnInit } from '@angular/core';
   ]
 })
 export class PlayerComponent implements OnInit {
-  public tracks: Array<{ name: string, value: string }> = [];
+  public tracks: Array<ITrack> = [];
   public track = '';
 
-  constructor() { }
+  constructor(
+    private audioTracks: AudioTracksService,
+  ) { }
 
   ngOnInit() {
     this.tracks.push({
@@ -31,6 +34,13 @@ export class PlayerComponent implements OnInit {
       value: ''
     });
 
+    this.audioTracks.fetch()
+      .then((tracks) => {
+        this.tracks.push(...tracks);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   onTrackSelect(e: Event) {
