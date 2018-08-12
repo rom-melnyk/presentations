@@ -2,12 +2,13 @@
   "name": "spectrum-vizualizer",
   "version": "0.0.0",
   "scripts": {
+    "audio-src": "node src/audio-src.js",
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "test": "ng test",
+    "start": "node src/audio-src.js && ng serve",
+    "build": "node src/audio-src.js && ng build",
+    "test": "node src/audio-src.js && ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "node src/audio-src.js && ng e2e"
   },
   "private": true,
   "dependencies": {
