@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ElementRef } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, ElementRef } from '@angular/core';
 
 const DEFAULT_COLOR = 'hsl(180, 20%, 70%)';
 
@@ -18,9 +18,9 @@ const DEFAULT_COLOR = 'hsl(180, 20%, 70%)';
     }`
   ]
 })
-export class CanvasComponent implements OnInit {
-  @Input() colorize = false;
+export class CanvasComponent implements OnInit, OnChanges {
   @Input() fftData: Uint8Array = new Uint8Array();
+  @Input() colorize = false;
 
   private width: number;
   private height: number;
@@ -47,7 +47,11 @@ export class CanvasComponent implements OnInit {
     canvasEl.height = offsetHeight;
   }
 
-  drawBars() {
+  ngOnChanges() {
+    if (!this.ctx) {
+      return;
+    }
+
     this.ctx.clearRect(0, 0, this.width, this.height);
 
     this.recalculateBarConfig();

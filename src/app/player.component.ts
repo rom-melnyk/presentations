@@ -1,5 +1,6 @@
 import { Component, OnInit, ElementRef, Output, EventEmitter } from '@angular/core';
 import { ITrack, AudioTracksService } from './services/audio-tracks.service';
+import { AudioAnalyserService } from './services/audio-analyser.service';
 
 @Component({
   selector: 'app-player',
@@ -24,16 +25,21 @@ export class PlayerComponent implements OnInit {
   public tracks: Array<ITrack> = [];
   public selectedTrack = '';
   @Output() public height = new EventEmitter<number>();
+  @Output() public analyserNode = new EventEmitter<AnalyserNode>();
 
   constructor(
     private audioTracks: AudioTracksService,
+    private audioAnalyser: AudioAnalyserService,
     private el: ElementRef,
   ) { }
 
   ngOnInit() {
-    this.height.emit(this.el.nativeElement.offsetHeight);
-
     const selectEl = this.el.nativeElement.querySelector('select');
+    const audioEl = this.el.nativeElement.querySelector('audio');
+    const analyserNode = this.audioAnalyser.fromAudioElement(audioEl);
+
+    this.height.emit(this.el.nativeElement.offsetHeight);
+    this.analyserNode.emit(analyserNode);
 
     this.tracks.push({
       name: 'Please select a track',
@@ -43,6 +49,7 @@ export class PlayerComponent implements OnInit {
     this.audioTracks.fetch()
       .then((tracks) => {
         this.tracks.push(...tracks);
+        // force pause for DOM <select> become new options
         return new Promise((resolve) => setTimeout(resolve, 100));
       })
       .then(() => {
