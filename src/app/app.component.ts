@@ -3,7 +3,7 @@ import { Component, OnInit, ElementRef, HostListener } from '@angular/core';
 @Component({
   selector: 'app-root',
   template: `
-    <app-player (height)="setCanvasHeight($event)" (analyserNode)="setAnalyserNode($event)"></app-player>
+    <app-player (heightSet)="setCanvasHeight($event)" (analyserNodeSet)="setAnalyserNode($event)"></app-player>
     <app-canvas [style.height]="canvasHeight" [fftData]="fftData" [colorize]="colorize"></app-canvas>
   `,
   styles: [
@@ -41,10 +41,13 @@ export class AppComponent implements OnInit {
   }
 
   setAnalyserNode(analyserNode: AnalyserNode) {
-    const arr = new Uint8Array(8);
+    /*const arr = new Uint8Array(8);
     arr.forEach((x, i) => {
       arr[i] = Math.round(Math.random() * 256);
     });
-    this.fftData = arr;
+    Promise.resolve()
+      .then(() => {
+        this.fftData = arr;
+      });*/
   }
 }

@@ -4,13 +4,11 @@ const DEFAULT_COLOR = 'hsl(180, 20%, 70%)';
 
 @Component({
   selector: 'app-canvas',
-  template: `
-    <canvas></canvas>
-  `,
+  template: `<canvas></canvas>`,
   styles: [
     `:host {
       display: block;
-      background-color: #37a;
+      border: 1px solid ${DEFAULT_COLOR};
     }`,
     `canvas {
       width: 100%;
@@ -26,11 +24,6 @@ export class CanvasComponent implements OnInit, OnChanges {
   private height: number;
   private ctx: CanvasRenderingContext2D;
   private gapFactor = .1;
-  private barConfig: { n: number, width: number, gap: number } = {
-    n: 0,
-    width: 0,
-    gap: 0,
-  };
 
   constructor(
     private el: ElementRef,
@@ -54,35 +47,23 @@ export class CanvasComponent implements OnInit, OnChanges {
 
     this.ctx.clearRect(0, 0, this.width, this.height);
 
-    this.recalculateBarConfig();
-    const { n, width, gap } = this.barConfig;
+    const n = this.fftData.length;
+    // n * barWidth + (n + 1) * barWidth * gapFactor = width;
+    // barWidth = width / (n + (n + 1) * gapFactor);
+    const width = this.width / (n + (n + 1) * this.gapFactor);
+    const gap = width * this.gapFactor;
 
     for (let i = 0; i < n; i++) {
       const height = this.fftData[ i ] / 256 * ( this.height - 2 * gap );
-      this.ctx.fillStyle = this.colorize ? this.getHsl(i) : DEFAULT_COLOR;
+      this.ctx.fillStyle = this.colorize
+        ? `hsl(${ Math.floor(360 * i / this.fftData.length) }, 50%, 50%)`
+        : DEFAULT_COLOR;
       this.ctx.fillRect(
         gap + (width + gap) * i,
         (this.height - height) / 2,
         width,
         height,
       );
-    }
-  }
-
-  getHsl(pos: number): string {
-    return`hsl(${ Math.floor(360 * pos / this.fftData.length) }, 50%, 50%)`;
-  }
-
-  recalculateBarConfig(): void {
-    const n = this.fftData.length;
-
-    if (n !== this.barConfig.n) {
-      // n * barWidth + (n + 1) * barWidth * gapFactor = width;
-      // barWidth = width / (n + (n + 1) * gapFactor);
-      const width = this.width / (n + (n + 1) * this.gapFactor);
-      const gap = width * this.gapFactor;
-
-      this.barConfig = { n, width, gap };
     }
   }
 }

@@ -24,8 +24,8 @@ import { AudioAnalyserService } from './services/audio-analyser.service';
 export class PlayerComponent implements OnInit {
   public tracks: Array<ITrack> = [];
   public selectedTrack = '';
-  @Output() public height = new EventEmitter<number>();
-  @Output() public analyserNode = new EventEmitter<AnalyserNode>();
+  @Output() public heightSet = new EventEmitter<number>();
+  @Output() public analyserNodeSet = new EventEmitter<AnalyserNode>();
 
   constructor(
     private audioTracks: AudioTracksService,
@@ -38,8 +38,8 @@ export class PlayerComponent implements OnInit {
     const audioEl = this.el.nativeElement.querySelector('audio');
     const analyserNode = this.audioAnalyser.fromAudioElement(audioEl);
 
-    this.height.emit(this.el.nativeElement.offsetHeight);
-    this.analyserNode.emit(analyserNode);
+    this.heightSet.emit(this.el.nativeElement.offsetHeight);
+    this.analyserNodeSet.emit(analyserNode);
 
     this.tracks.push({
       name: 'Please select a track',
@@ -49,17 +49,18 @@ export class PlayerComponent implements OnInit {
     this.audioTracks.fetch()
       .then((tracks) => {
         this.tracks.push(...tracks);
-        // force pause for DOM <select> become new options
-        return new Promise((resolve) => setTimeout(resolve, 100));
-      })
-      .then(() => {
-        // Emulating first track got selected
-        const firstTrack = this.tracks[1].value;
-        selectEl.value = firstTrack;
-        this.selectedTrack = firstTrack;
+
+        // Emulate first track got selected
+        // (need to wait till DOM <select> become new options)
+        return new Promise((resolve) => setTimeout(resolve, 100))
+          .then(() => {
+            const firstTrack = this.tracks[1].value;
+            selectEl.value = firstTrack;
+            this.selectedTrack = firstTrack;
+          });
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       });
   }
 
