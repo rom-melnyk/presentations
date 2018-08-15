@@ -17,7 +17,8 @@ export class AudioAnalyserService {
     audioSourceNode.connect(this.audioAnalyserNode);
     this.audioAnalyserNode.connect(this.audioContext.destination);
 
-    this.audioAnalyserNode.fftSize = 512; // power of 2
+    this.audioAnalyserNode.fftSize = 128; // power of 2
+    this.audioAnalyserNode.smoothingTimeConstant = .95;
     return this.audioAnalyserNode;
   }
 

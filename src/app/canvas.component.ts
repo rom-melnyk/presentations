@@ -54,7 +54,8 @@ export class CanvasComponent implements OnInit, OnChanges {
     const gap = width * this.gapFactor;
 
     for (let i = 0; i < n; i++) {
-      const height = this.fftData[ i ] / 256 * ( this.height - 2 * gap );
+      const fftValue = this.fftData[ i ] - 128;
+      const height = fftValue / 128 * ( this.height - 2 * gap );
       this.ctx.fillStyle = this.colorize
         ? `hsl(${ Math.floor(360 * i / this.fftData.length) }, 50%, 50%)`
         : DEFAULT_COLOR;
