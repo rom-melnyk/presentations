@@ -1,4 +1,6 @@
 import { Component, OnInit, ElementRef, HostListener } from '@angular/core';
+import { interval } from 'rxjs';
+import { map, combineLatest, filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -41,13 +43,36 @@ export class AppComponent implements OnInit {
   }
 
   setAnalyserNode(analyserNode: AnalyserNode) {
-    /*const arr = new Uint8Array(8);
-    arr.forEach((x, i) => {
-      arr[i] = Math.round(Math.random() * 256);
-    });
-    Promise.resolve()
-      .then(() => {
-        this.fftData = arr;
-      });*/
+    const timer$ = interval(100)
+      .pipe(
+        map(() => {
+          return { time: Date.now() };
+        })
+      );
+
+    const fftData$ = interval(1000)
+      .pipe(
+        map(() => {
+          const fftData = new Uint8Array(analyserNode.frequencyBinCount);
+          analyserNode.getByteTimeDomainData(fftData);
+          return {
+            time: Date.now(),
+            fftData
+          };
+        }),
+        filter(({fftData}) => {
+          const average = Array.prototype.reduce.call(fftData, (acc, x) => acc + x, 0) / fftData.length;
+          return average > 128;
+        }),
+        combineLatest(timer$),
+        map(([ fftData, timerData ]) => {
+          return timerData.time > fftData.time
+            ? this.fftData.map(x => (x - 128) * .9 + 128)
+            : fftData.fftData;
+        })
+      )
+      .subscribe((fftData) => {
+        this.fftData = fftData;
+      });
   }
 }
