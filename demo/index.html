@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Web Audio API demo</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script type="text/javascript" src="js/script.js" charset="utf-8"></script>
+</head>
+<body>
+    <div class="main-content">
+        <div class="player">
+            <select class="track-picker">
+                <option value="" selected="selected">Pick an audio track</option>
+            </select>
+            <audio class="player" controls="controls">
+                Your browser does not support the <code>&lt;audio&gt;</code> element.
+            </audio>
+        </div>
+        <div class="visualization original">
+            <canvas></canvas>
+        </div>
+        <div class="effect-controls">
+            <select class="effect-picker">
+                <option></option>
+            </select>
+        </div>
+        <div class="visualization modified">
+            <canvas></canvas>
+        </div>
+    </div>
+</body>
+</html>
