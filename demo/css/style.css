@@ -10,6 +10,9 @@
 }
 
 body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
   font-family: sans-serif;
   font-size: 20px;
   background-color: var(--color-light);
@@ -19,20 +22,17 @@ body {
 .main-content {
   width: 80%;
   min-width: 20rem;
-  max-width: 50rem;
   margin: 2rem auto;
   padding: 2rem;
   background-color: #ffffff;
   box-shadow: 0 0 2rem 0 var(--color-dark);
   border-radius: 1rem;
 }
-.main-content > * {
-  margin-bottom: 2rem;
-}
-.main-content > *:last-child {
-  margin-bottom: 0;
-}
 
+
+.player > * {
+  margin-bottom: .5rem;
+}
 
 select {
   width: 100%;
@@ -43,17 +43,15 @@ select option {
   padding: .25rem;
 }
 
-
-.player select {
-  margin-bottom: .5rem;
-}
-.player audio {
+audio {
   width: 100%;
-  background-color: var(--color-light);
+  /*background-color: var(--color-light);*/
 }
 
 .visualization {
-  height: 10rem;
+  height: 50%;
+  min-height: 10rem;
+  margin-top: 2rem;
   border: 1px solid var(--color-dark);
 }
 .visualization canvas {
