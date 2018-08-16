@@ -17,7 +17,7 @@ class Visualizer {
     this.ctx = <CanvasRenderingContext2D>canvas.getContext('2d');
   }
 
-  drawBars(data: Uint8Array, colorize: boolean = false) {
+  drawBars(data: Array<number>, colorize: boolean = false) {
     this.ctx.clearRect(0, 0, this.width, this.height);
 
     const n = data.length;
@@ -27,16 +27,16 @@ class Visualizer {
     const gapWidth = barWidth * this.gapFactor;
 
     for (let i = 0; i < n; i++) {
-      const fractionValue = (data[ i ] - 128) / 128;
-      const barHeight = fractionValue * ( this.height - 2 * gapWidth );
+      const fractionValue = data[i] / 128;
+      const barHeight = fractionValue * ( this.height - 2 * gapWidth ) / 2;
       this.ctx.fillStyle = colorize
         ? `hsl(${ Math.floor(360 * i / n) }, 50%, 50%)`
         : DEFAULT_COLOR;
       this.ctx.fillRect(
         gapWidth + (barWidth + gapWidth) * i,
-        (this.height - barHeight) / 2,
+        this.height / 2 - barHeight,
         barWidth,
-        barHeight,
+        barHeight
       );
     }
   }

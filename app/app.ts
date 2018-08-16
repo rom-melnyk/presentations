@@ -3,7 +3,8 @@ import {
   map, mapTo,
   tap,
   filter,
-  combineLatest, merge
+  combineLatest, merge,
+  pairwise,
 } from 'rxjs/operators';
 
 import { AudioAnalyser } from './audio-analyser';
@@ -69,46 +70,49 @@ function runDemo() {
       merge(keyUp$, keyDown$)
     );
 
-    kbd$.subscribe((v: boolean) => {
-      if (v) {
+    kbd$.pipe(
+      pairwise()
+    ).subscribe(([prev, current]) => {
+      if (current) {
         console.info('---> Shift is pressed');
-      } else {
+      } else if (prev) {
         console.log('<--- Shift was released');
       }
     });
 
   // -------- poll the analyser --------
-  let localFftData: Uint8Array;
+  let fftCache: Array<number>;
   const timer$ = interval(40).pipe(
     map(() => { return { '@': Date.now() }; }),
   );
-  const analyser$ = interval(40)
+  const analyser$ = interval(80)
     .pipe(
       map(() => {
         const fftData = new Uint8Array(analyser.frequencyBinCount);
         analyser.getByteTimeDomainData(fftData); // for bars
         return {
           '@': Date.now(),
-          fftData
+          fftData: [...fftData].map(x => x - 128)
         };
       }),
       filter(({ fftData }) => {
-        const average = fftData.reduce((acc, x) => acc + x, 0) / fftData.length;
-        return average > 142;
+        const average = fftData.reduce((acc, x) => acc + Math.abs(x), 0) / fftData.length;
+        return average > 16;
       }),
       combineLatest(timer$),
-      map(([analyser, timer]): Uint8Array => {
+      map(([analyser, timer]): Array<number> => {
         if (timer['@'] > analyser['@']) {
-          return localFftData.map(x => (x - 128) * .95 + 128);
+          return fftCache.map(x => x * .975);
         } else {
           return analyser.fftData;
         }
       }),
-      tap((data) => { localFftData = data; })
+      tap((data) => { fftCache = data; }),
+      combineLatest(kbd$)
     );
 
-  analyser$.subscribe((fftData: Uint8Array) => {
-    visualizer.drawBars(fftData);
+  analyser$.subscribe(([fftData, colorize]: [Array<number>, boolean]) => {
+    visualizer.drawBars(fftData, colorize);
   });
 }
 
