@@ -8,8 +8,15 @@ import {
 } from 'rxjs/operators';
 
 import { AudioSourceManager } from './audio-source-manager';
+import { BarsVisualizerType, WaveformVisualizerType } from './visuzlizer-types';
 import { AudioAnalyser } from './audio-analyser';
 import { Visualizer } from './visualizer';
+
+
+const VIS_TYPE = {
+  Bars: BarsVisualizerType,
+  Waveform: WaveformVisualizerType
+}['Waveform'];
 
 
 function runDemo() {
@@ -57,19 +64,13 @@ function runDemo() {
   const analyser$ = interval(80)
     .pipe(
       map(() => {
-        const fftData = new Uint8Array(analyser.frequencyBinCount);
-        analyser.getByteFrequencyData(fftData); // for bars
-        // analyser.getByteTimeDomainData(fftData); // for waveform
+        const fftData = VIS_TYPE.getFftData(analyser);
         return {
           '@': Date.now(),
-          fftData: [...fftData] // .map(x => x - 128) // when use waveform
+          fftData
         };
       }),
-      filter(({ fftData }) => {
-        const average = fftData.reduce((acc, x) => acc + x, 0) / fftData.length;
-        // const average = fftData.reduce((acc, x) => acc + Math.abs(x), 0) / fftData.length;
-        return average > 80;
-      }),
+      filter(({ fftData }) => VIS_TYPE.filter(fftData)),
       combineLatest(timer$),
       map(([analyserData, timer]): Array<number> => {
         if (timer['@'] > analyserData['@']) {
@@ -83,8 +84,11 @@ function runDemo() {
     );
 
   analyser$.subscribe(([fftData, colorize]: [Array<number>, boolean]) => {
-    // visualizer.drawWaveform(fftData, colorize);
-    visualizer.drawBars(fftData, colorize);
+    if (VIS_TYPE === BarsVisualizerType) {
+      visualizer.drawBars(fftData, colorize);
+    } else /*WaveformVisualizerType*/ {
+      visualizer.drawWaveform(fftData, colorize);
+    }
   });
 }
 
