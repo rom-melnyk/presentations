@@ -8,7 +8,7 @@ export const BarsVisualizerType: IVisualizerType = {
   getFftData(analyser: AnalyserNode): Array<number> {
     const fftData = new Uint8Array(analyser.frequencyBinCount);
     analyser.getByteFrequencyData(fftData);
-    return [...fftData];
+    return [...fftData].slice(0, fftData.length / 2); // the tail is usually zeroes
   },
 
   filter(fftData: Array<number>): boolean {
