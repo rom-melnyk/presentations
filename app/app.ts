@@ -25,20 +25,6 @@ function runDemo() {
   const analyser = (new AudioAnalyser(audioEl)).getAnalyser();
   const visualizer = new Visualizer(canvasEl);
 
-  // -------- track change --------
-  fromEvent(trackPickerEl, 'change')
-    .pipe(
-      map((event: Event) => (<HTMLSelectElement>event.target).value),
-    )
-    .subscribe((url: string) => {
-      if (url) {
-        console.info(`Audio track selected: "${url}"`);
-      } else {
-        console.warn('No audio track selected');
-      }
-      audioEl.src = url;
-    });
-
   // -------- keypress analyzer --------
   const keyUp$ = fromEvent(window, 'keyup')
     .pipe(
