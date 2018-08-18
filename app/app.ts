@@ -7,6 +7,7 @@ import {
   pairwise,
 } from 'rxjs/operators';
 
+import { AudioSourceManager } from './audio-source-manager';
 import { AudioAnalyser } from './audio-analyser';
 import { Visualizer } from './visualizer';
 
@@ -16,31 +17,13 @@ function runDemo() {
   const audioEl = <HTMLAudioElement>document.querySelector('audio');
   const canvasEl = <HTMLCanvasElement>document.querySelector('canvas');
 
+  const audioSourceManager = new AudioSourceManager(trackPickerEl, audioEl);
+  audioSourceManager.loadSources()
+    .then(audioSourceManager.selectFirstTrack)
+    .catch(console.error);
+
   const analyser = (new AudioAnalyser(audioEl)).getAnalyser();
   const visualizer = new Visualizer(canvasEl);
-
-  // -------- prepare audio files --------
-  fetch('./audio/audio-src.json')
-    .then((res: Response) => res.json())
-    .then((files: string[]) => {
-      console.info(`${files.length} audio file(-s) detected`);
-      files.forEach((file: string) => {
-        const optionEl = document.createElement('option');
-        optionEl.value = './audio/' + file;
-        optionEl.innerText = file.replace(/_/g, ' ');
-        trackPickerEl.appendChild(optionEl);
-      });
-
-      // force pause to <option>s appear in the DOM tree
-      return new Promise((resolve) => setTimeout(() => resolve(), 100));
-    })
-    .then(() => {
-      // select 1st element
-      const firstFile = (<HTMLOptionElement>trackPickerEl.children[1]).value;
-      trackPickerEl.value = firstFile;
-      audioEl.src = firstFile;
-    })
-    .catch(console.error);
 
   // -------- track change --------
   fromEvent(trackPickerEl, 'change')
