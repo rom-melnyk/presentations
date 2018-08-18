@@ -43,7 +43,7 @@ function runDemo() {
       pairwise()
     ).subscribe(([prev, current]) => {
       if (current) {
-        console.info('---> Shift is pressed');
+        console.log('---> Shift is pressed');
       } else if (prev) {
         console.log('<--- Shift was released');
       }
@@ -52,28 +52,30 @@ function runDemo() {
   // -------- poll the analyser --------
   let fftCache: Array<number>;
   const timer$ = interval(40).pipe(
-    map(() => { return { '@': Date.now() }; }),
+    map(() => ({'@': Date.now()})),
   );
   const analyser$ = interval(80)
     .pipe(
       map(() => {
         const fftData = new Uint8Array(analyser.frequencyBinCount);
-        analyser.getByteTimeDomainData(fftData); // for bars
+        analyser.getByteFrequencyData(fftData); // for bars
+        // analyser.getByteTimeDomainData(fftData); // for waveform
         return {
           '@': Date.now(),
-          fftData: [...fftData].map(x => x - 128)
+          fftData: [...fftData] // .map(x => x - 128) // when use waveform
         };
       }),
       filter(({ fftData }) => {
-        const average = fftData.reduce((acc, x) => acc + Math.abs(x), 0) / fftData.length;
-        return average > 16;
+        const average = fftData.reduce((acc, x) => acc + x, 0) / fftData.length;
+        // const average = fftData.reduce((acc, x) => acc + Math.abs(x), 0) / fftData.length;
+        return average > 80;
       }),
       combineLatest(timer$),
-      map(([analyser, timer]): Array<number> => {
-        if (timer['@'] > analyser['@']) {
+      map(([analyserData, timer]): Array<number> => {
+        if (timer['@'] > analyserData['@']) {
           return fftCache.map(x => x * .975);
         } else {
-          return analyser.fftData;
+          return analyserData.fftData;
         }
       }),
       tap((data) => { fftCache = data; }),
@@ -81,6 +83,7 @@ function runDemo() {
     );
 
   analyser$.subscribe(([fftData, colorize]: [Array<number>, boolean]) => {
+    // visualizer.drawWaveform(fftData, colorize);
     visualizer.drawBars(fftData, colorize);
   });
 }

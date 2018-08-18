@@ -8,10 +8,12 @@ export class AudioAnalyser {
     this.ctx = new AudioContext();
 
     this.analyser = this.ctx.createAnalyser();
-    this.analyser.minDecibels = -100;
-    this.analyser.maxDecibels = -30;
-    this.analyser.smoothingTimeConstant = .4;
+    this.analyser.minDecibels = -90;
+    this.analyser.maxDecibels = -20;
+    this.analyser.smoothingTimeConstant = .5;
     this.analyser.fftSize = 128;
+
+    // (<any>window).ANALYSER = this.analyser;
 
     const source = this.ctx.createMediaElementSource(this.audioEl);
     source.connect(this.analyser);
