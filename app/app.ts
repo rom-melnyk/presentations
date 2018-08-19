@@ -8,15 +8,8 @@ import {
 } from 'rxjs/operators';
 
 import { AudioSourceManager } from './audio-source-manager';
-import { BarsVisualizerType, WaveformVisualizerType } from './visuzlizer-types';
 import { AudioAnalyser } from './audio-analyser';
-import { Visualizer } from './visualizer';
-
-
-const VIS_TYPE = {
-  Bars: BarsVisualizerType,
-  Waveform: WaveformVisualizerType
-}['Waveform']; // CHANGE ME FOR DIFFERENT VISUALIZATION
+import { BarsVisualizer, WaveformVisualizer } from './visuzlizers';
 
 
 function runDemo() {
@@ -30,7 +23,10 @@ function runDemo() {
     .catch(console.error);
 
   const analyser = (new AudioAnalyser(audioEl)).getAnalyser();
-  const visualizer = new Visualizer(canvasEl);
+  const visualizer = {
+    Bars: new BarsVisualizer(canvasEl),
+    Waveform: new WaveformVisualizer(canvasEl)
+  }['Bars']; // CHANGE ME FOR DIFFERENT VISUALIZATION
 
   // -------- keypress analyzer --------
   const keyUp$ = fromEvent(window, 'keyup')
@@ -59,18 +55,15 @@ function runDemo() {
   // -------- poll the analyser --------
   let fftCache: Array<number>;
   const timer$ = interval(40).pipe(
-    map(() => ({'@': Date.now()})),
+    map(() => ({ '@': Date.now() })),
   );
   const analyser$ = interval(80)
     .pipe(
       map(() => {
-        const fftData = VIS_TYPE.getFftData(analyser);
-        return {
-          '@': Date.now(),
-          fftData
-        };
+        const fftData = visualizer.fetchFftData(analyser);
+        return { '@': Date.now(), fftData };
       }),
-      filter(({ fftData }) => VIS_TYPE.filter(fftData)),
+      filter(({ fftData }) => visualizer.filter(fftData)),
       combineLatest(timer$),
       map(([analyserData, timer]): Array<number> => {
         if (timer['@'] > analyserData['@']) {
@@ -84,11 +77,7 @@ function runDemo() {
     );
 
   analyser$.subscribe(([fftData, colorize]: [Array<number>, boolean]) => {
-    if (VIS_TYPE === BarsVisualizerType) {
-      visualizer.drawBars(fftData, colorize);
-    } else /*WaveformVisualizerType*/ {
-      visualizer.drawWaveform(fftData, colorize);
-    }
+    visualizer.draw(fftData, colorize);
   });
 }
 
