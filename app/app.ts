@@ -16,7 +16,7 @@ import { Visualizer } from './visualizer';
 const VIS_TYPE = {
   Bars: BarsVisualizerType,
   Waveform: WaveformVisualizerType
-}['Bars']; // CHANGE ME FOR DIFFERENT VISUALIZATION
+}['Waveform']; // CHANGE ME FOR DIFFERENT VISUALIZATION
 
 
 function runDemo() {

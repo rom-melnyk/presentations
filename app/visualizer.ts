@@ -66,35 +66,21 @@ export class Visualizer {
       return { x, y };
     });
 
-    dataCoords.forEach(({ x, y }, i) => {
-      if (i === 0) {
-        this.ctx.moveTo(0, this.height / 2);
-        this.ctx.bezierCurveTo(
-          0, this.height / 2,
-          x - stepWidth / 2, y,
-          x, y
-        );
-        return;
-      }
+    this.ctx.moveTo(dataCoords[0].x, dataCoords[0].y);
+    for (let i = 1; i < n; i++) {
+      const { x, y } = dataCoords[i];
 
       const cp1x = dataCoords[i - 1].x + stepWidth / 2;
       const cp1y = dataCoords[i - 1].y;
-
-      if (i === n - 1) {
-        this.ctx.bezierCurveTo(
-          cp1x, cp1y,
-          this.width, this.height / 2,
-          this.width, this.height / 2
-        );
-        return;
-      }
+      const cp2x = x - stepWidth / 2;
+      const cp2y = y;
 
       this.ctx.bezierCurveTo(
         cp1x, cp1y,
-        x - stepWidth / 2, y,
+        cp2x, cp2y,
         x, y
       );
-    });
+    }
 
     this.ctx.strokeStyle = DEFAULT_COLOR;
     this.ctx.lineWidth = 5;

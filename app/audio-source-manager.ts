@@ -1,9 +1,13 @@
+import { fromEvent } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 export class AudioSourceManager {
   constructor(
     private selectEl: HTMLSelectElement,
     private audioEl: HTMLAudioElement,
   ) {
     this.selectFirstTrack = this.selectFirstTrack.bind(this);
+    this.followTrackChange();
   }
 
   loadSources(): Promise<any> {
@@ -32,5 +36,14 @@ export class AudioSourceManager {
     } else {
       console.warn('No audio track to select');
     }
+  }
+
+  private followTrackChange() {
+    fromEvent(this.selectEl, 'change').pipe(
+      map((e: Event) => (<HTMLSelectElement>e.target).value)
+    ).subscribe((file: string) => {
+      console.log(`Track "${file}" selected`);
+      this.audioEl.src = file;
+    });
   }
 }
