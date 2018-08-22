@@ -9,12 +9,14 @@ import {
 
 import { AudioSourceManager } from './audio-source-manager';
 import { AudioAnalyser } from './audio-analyser';
-import { BarsVisualizer, WaveformVisualizer } from './visuzlizers';
+import { IVisualizer, BarsVisualizer, WaveformVisualizer } from './visuzlizers';
 
 
 function runDemo() {
   const trackPickerEl = <HTMLSelectElement>document.querySelector('select');
   const audioEl = <HTMLAudioElement>document.querySelector('audio');
+  const visualizerTypeEls = <NodeList>document.querySelectorAll('[name=visualizer-type]');
+  const defaultVisualiserTypeEl = <HTMLInputElement>document.querySelector('[name=visualizer-type][checked]');
   const canvasEl = <HTMLCanvasElement>document.querySelector('canvas');
 
   const audioSourceManager = new AudioSourceManager(trackPickerEl, audioEl);
@@ -23,12 +25,30 @@ function runDemo() {
     .catch(console.error);
 
   const analyser = (new AudioAnalyser(audioEl)).getAnalyser();
-  const visualizer = {
-    Bars: new BarsVisualizer(canvasEl),
-    Waveform: new WaveformVisualizer(canvasEl)
-  }['Bars']; // CHANGE ME FOR DIFFERENT VISUALIZATION
 
-  // -------- keypress analyzer --------
+  // -------- track visualizer type (radio buttons) --------
+  type TVisualizerTypes = 'bars' | 'waveform';
+  const visualizerTypes = <{ [key in TVisualizerTypes ]: IVisualizer }>{
+    bars: new BarsVisualizer(canvasEl),
+    waveform: new WaveformVisualizer(canvasEl),
+  };
+  const defaultVisualizerType = <TVisualizerTypes>defaultVisualiserTypeEl.value;
+  let visualizer: IVisualizer = visualizerTypes[defaultVisualizerType];
+
+  const visTypeEls$$ = (<Array<HTMLInputElement>>[...visualizerTypeEls]).map(
+    (el) => fromEvent(el, 'change').pipe(
+      map((e: Event) => ({ checked: el.checked, value: el.value })),
+      filter(({ checked }) => checked),
+      map(({ value }) => <TVisualizerTypes>value)
+    )
+  );
+  of(defaultVisualizerType).pipe(
+    merge(...visTypeEls$$)
+  ).subscribe((type: TVisualizerTypes) => {
+    visualizer = visualizerTypes[type];
+  });
+
+  // -------- track Shift keypress --------
   const keyUp$ = fromEvent(window, 'keyup')
     .pipe(
       mapTo(false)

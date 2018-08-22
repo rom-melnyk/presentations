@@ -1,7 +1,7 @@
 import { VisualizerCanvas } from './visualizer-canvas';
 
 
-interface IVisualizer {
+export interface IVisualizer {
   fetchFftData: (analyser: AnalyserNode) => Array<number>;
   filter: (fftData: Array<number>) => boolean;
   draw: (fftData: Array<number>, colorize?: boolean) => void;
