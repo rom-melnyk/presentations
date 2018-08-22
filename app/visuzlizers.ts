@@ -116,7 +116,12 @@ export class WaveformVisualizer implements IVisualizer {
       );
     }
 
-    ctx.strokeStyle = DEFAULT_COLOR;
+    if (colorize) {
+      const average = fftData.reduce((acc, x) => acc + x, 0) / fftData.length;
+      ctx.strokeStyle = `hsl(${ Math.floor(180 + average / 128 * 180) }, 50%, 50%)`;
+    } else {
+      ctx.strokeStyle = DEFAULT_COLOR;
+    }
     ctx.lineWidth = 5;
     ctx.stroke();
   }
