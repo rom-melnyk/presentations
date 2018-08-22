@@ -48,6 +48,16 @@ audio {
   /*background-color: var(--color-light);*/
 }
 
+label > input[type=radio] {
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  vertical-align: middle;
+}
+label + label {
+  margin-left: 1rem;
+}
+
 .visualization {
   height: 50%;
   min-height: 10rem;
