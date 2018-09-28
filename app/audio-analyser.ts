@@ -8,11 +8,12 @@ export class AudioAnalyser {
     this.ctx = new AudioContext();
 
     this.analyser = this.ctx.createAnalyser();
-    this.analyser.minDecibels = -90;
+    this.analyser.minDecibels = -70;
     this.analyser.maxDecibels = -20;
     this.analyser.smoothingTimeConstant = .5;
     this.analyser.fftSize = 128;
 
+    // uncomment for debug purposes
     // (<any>window).ANALYSER = this.analyser;
 
     const source = this.ctx.createMediaElementSource(this.audioEl);
@@ -20,7 +21,9 @@ export class AudioAnalyser {
     this.analyser.connect(this.ctx.destination);
   }
 
-  getAnalyser() {
-    return this.analyser;
+  getFft(): number[] {
+    const fftData = new Uint8Array(this.analyser.frequencyBinCount);
+    this.analyser.getByteFrequencyData(fftData);
+    return [...fftData]; // convert Uint8Array --> number[]
   }
 }
