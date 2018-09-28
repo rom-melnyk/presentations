@@ -8,9 +8,9 @@ export class AudioAnalyser {
     this.ctx = new AudioContext();
 
     this.analyser = this.ctx.createAnalyser();
-    this.analyser.minDecibels = -70;
-    this.analyser.maxDecibels = -20;
-    this.analyser.smoothingTimeConstant = .5;
+    this.analyser.minDecibels = -100;
+    this.analyser.maxDecibels = -10;
+    this.analyser.smoothingTimeConstant = .6;
     this.analyser.fftSize = 128;
 
     // uncomment for debug purposes
