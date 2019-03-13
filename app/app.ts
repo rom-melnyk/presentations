@@ -19,10 +19,10 @@ function runDemo() {
       console.info(`Track ${files[0]} selected`);
     });
 
-  const analyser$ = interval(40)
-    .pipe(
-      map(() => analyser.getFft()),
-    );
+  // ------- delete code below if you perform the lesson -------
+  const analyser$ = interval(40).pipe(
+    map(() => analyser.getFft()),
+  );
 
   const kbd$ = merge(
     fromEvent(window, 'keyup'),
@@ -40,6 +40,7 @@ function runDemo() {
     .subscribe(([fftData, isShiftPressed]: [number[], boolean]) => {
       visualizer.drawBars(fftData, isShiftPressed);
     });
+  // -------------------------------------------------------------
 }
 
 
