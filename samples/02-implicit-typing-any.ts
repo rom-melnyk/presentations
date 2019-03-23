@@ -1,3 +1,7 @@
+/**
+ * This file fails. That's by intention.
+ */
+
 const array = [0, false, 'test', {}];
 const el = array[ Math.floor(Math.random() * array.length) ];
 
