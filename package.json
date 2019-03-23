@@ -1,22 +1,22 @@
 {
-  "name": "rxjs-webaudio-demo",
+  "name": "types-in-typescript",
   "version": "0.0.1",
-  "description": "RxJS + WebAudio API demo made for NextBuild-2018",
+  "description": "Types in Typescript: how they work and how to deal advanced cases",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rom-melnyk/presentations/tree/2018-nextbuild"
+    "url": "https://github.com/rom-melnyk/presentations/tree/2019-types-in-typescript"
   },
   "bugs": {
     "url": "https://github.com/rom-melnyk/presentations/issues",
     "email": "email.rom.melnyk@gmail.com"
   },
   "keywords": [
-    "audio",
-    "webaudio",
+    "typescript",
     "ts",
-    "rxjs",
-    "reactive",
-    "nextbuild"
+    "types",
+    "strong",
+    "generic",
+    "audio"
   ],
   "author": {
     "name": "Roman Melnyk",
@@ -27,22 +27,17 @@
   "main": "app/app.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node audio-src.js && webpack-dev-server --colors --hot",
-    "prod": "node audio-src.js && webpack -p --progress --colors"
+    "start": "node -r ts-node/register"
   },
   "engines": {
     "node": ">=8.0.0"
   },
   "devDependencies": {
-    "ts-loader": "^4.4.2",
-    "tslint": "^5.11.0",
-    "webpack": "^4.16.5",
-    "webpack-cli": "^3.1.0",
-    "webpack-dev-server": "^3.1.5"
+    "tslint": "^5.14.0"
   },
   "dependencies": {
-    "rxjs": "^6.2.2",
-    "typescript": "^3.0.1"
+    "ts-node": "^8.0.3",
+    "typescript": "^3.3.3"
   },
   "private": true
 }
