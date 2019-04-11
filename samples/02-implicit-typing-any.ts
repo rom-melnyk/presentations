@@ -5,4 +5,4 @@
 const array = [0, false, 'test', {}];
 const el = array[ Math.floor(Math.random() * array.length) ];
 
-console.log(el[0]);
+console.log(el[0]); // TS7017: Element implicitly has an 'any' type...
