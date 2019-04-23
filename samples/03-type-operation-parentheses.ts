@@ -1,7 +1,7 @@
 type Dog = { bark: () => string; };
 type Cat = { purr: () => string; };
 
-type MyPet = { name: string } & (Cat | Dog);
+type MyPet = { name: string; } & (Cat | Dog);
 
 function adopt(pet: MyPet): void {}
 
