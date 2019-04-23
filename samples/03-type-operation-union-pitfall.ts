@@ -3,7 +3,7 @@ type Cat = { purr: () => string; };
 type MyPet = { name: string } & (Dog | Cat);
 
 const dog: MyPet = { bark: () => 'Woff!', name: 'Good boy', };
-const cat: MyPet = { bark: () => 'Meow!', name: 'Lucky', };
+const cat: MyPet = { purr: () => 'Meow!', name: 'Lucky', };
 
 function getMyPet(name: string): (MyPet | null) {
   return [dog, cat].find((myPet: MyPet) => myPet.name === name) || null;
