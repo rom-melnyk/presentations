@@ -1,6 +1,6 @@
 type Dog = { bark: () => string; };
 type Cat = { purr: () => string; };
-type MyPet = { name: string } & (Dog | Cat);
+type MyPet = { name: string; } & (Dog | Cat);
 
 const dog: MyPet = { bark: () => 'Woff!', name: 'Good boy', };
 const cat: MyPet = { purr: () => 'Meow!', name: 'Lucky', };
