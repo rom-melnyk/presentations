@@ -1,4 +1,4 @@
-type Person = { name: string } & { age: number };
+type Person = { name: string; } & { age: number; };
 
 interface GroupMember {
   groupId: number;
