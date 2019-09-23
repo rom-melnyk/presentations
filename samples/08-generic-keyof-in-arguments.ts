@@ -1,7 +1,7 @@
 type PartiallyQuantified<T, K extends keyof Quantifier> = {
   value: T;
 } & {
-  [key in K]: Quantifier[key]
+  [key in K]: Quantifier[key];
 };
 
 const onePerson: PartiallyQuantified<string, 'one'> = { value: 'me', one: 'person' };
